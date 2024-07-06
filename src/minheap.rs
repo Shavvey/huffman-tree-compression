@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+use std::collections::hash_map::HashMap;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Node {
@@ -30,6 +31,23 @@ impl MinHeap {
             size: 0,
         }
     }
+
+    pub fn from_map(map: &HashMap<char, u32>) -> MinHeap {
+        let mut min_heap = MinHeap::new(map.len() as u32);
+        let mut index: u32 = 0;
+        for (key, val) in map {
+            // build a node using the char mapping
+            let node = Node {
+                item: *key,
+                count: *val,
+                code: 0, // dont' assign a code just yet...
+            };
+            min_heap.arr.insert(index as usize, node);
+            index += 1;
+        }
+        min_heap
+    }
+
     // gets the left child in the minheap
     pub fn left_child(&self, index: u32) -> Option<&Node> {
         let l_item = 2 * index + 1;
