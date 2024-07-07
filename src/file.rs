@@ -26,6 +26,5 @@ pub fn map_chars(file_path: &str) -> HashMap<char, u32> {
             }
         }
     }
-    println!("{:?}", map);
     map
 }

@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use std::collections::hash_map::HashMap;
+use std::{collections::hash_map::HashMap, mem::swap};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Node {
@@ -76,8 +76,15 @@ impl MinHeap {
     }
 
     pub fn print(&self) {
-        println!("{:?}", self.arr);
+        for node in self.arr.iter() {
+            node.print();
+        }
         println!("Capacity: {}", self.capacity);
         println!("Size: {}", self.size);
+    }
+    pub fn swap(&mut self, i: u32, j: u32) {
+        let Some(mut n1) = self.arr.get(i as usize) else { return };
+        let Some(mut n2) = self.arr.get(j as usize) else { return };
+        swap(&mut n1, &mut n2);
     }
 }
