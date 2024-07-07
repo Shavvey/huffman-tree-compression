@@ -18,7 +18,7 @@ impl Node {
 
 pub struct MinHeap {
     arr: Vec<Node>, // avoding using generics for now..
-    capacity: u32,
+    capacity: u32,  // capacity of the given minheap
     size: u32,
 }
 
@@ -43,8 +43,10 @@ impl MinHeap {
                 code: 0, // dont' assign a code just yet...
             };
             min_heap.arr.insert(index as usize, node);
+            min_heap.size += 1;
             index += 1;
         }
+        min_heap.capacity = 0;
         min_heap
     }
 
@@ -68,6 +70,16 @@ impl MinHeap {
         Some(&self.arr[r_item as usize])
     }
 
+    // get the parent node
+    pub fn parent(&self, index: u32) -> Option<&Node> {
+        let p_item = (index - 1) / 2;
+        // check to see if we have overindex the array
+        if p_item > self.size {
+            return None;
+        }
+        Some(&self.arr[p_item as usize])
+    }
+
     pub fn get(&self, index: u32) -> Option<&Node> {
         if index > self.size {
             return None;
@@ -82,9 +94,13 @@ impl MinHeap {
         println!("Capacity: {}", self.capacity);
         println!("Size: {}", self.size);
     }
+
+    // swap two elements at index j and i
     pub fn swap(&mut self, i: u32, j: u32) {
         let Some(mut n1) = self.arr.get(i as usize) else { return };
         let Some(mut n2) = self.arr.get(j as usize) else { return };
         swap(&mut n1, &mut n2);
     }
+
+    pub fn heapify(&mut self) {}
 }
