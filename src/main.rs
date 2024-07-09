@@ -10,7 +10,9 @@ fn main() {
     println!("{:?}", lines);
     let map = file::map_chars(FILE_NAME);
     let mut min_heap = MinHeap::from_map(&map);
+    println!("===HEAP===");
     min_heap.print();
-    min_heap.min_heapify(0);
+    println!("===MIN HEAP===");
+    min_heap.build_min_heap();
     min_heap.print();
 }

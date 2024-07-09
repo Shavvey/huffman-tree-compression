@@ -4,7 +4,6 @@ use std::{cmp::Ordering, collections::hash_map::HashMap, mem::swap};
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
     item: char,
-    idx: u32,
     count: u32,
 }
 // implementing a very simple order and partial ordering scheme for the minheap nodes
@@ -23,7 +22,6 @@ impl Ord for Node {
 impl Node {
     pub fn print(&self) {
         println!("Character encoded: {}", self.item);
-        println!("Index: {}", self.idx);
         println!("Occurences: {}", self.count);
     }
 }
@@ -52,7 +50,6 @@ impl MinHeap {
             let node = Node {
                 item: *key,
                 count: *val,
-                idx: 0, // dont' assign a code just yet...
             };
             min_heap.heap.insert(index as usize, node);
             min_heap.size += 1;
@@ -110,29 +107,36 @@ impl MinHeap {
     // use min heapify to create min the heap property
     // where all children of a node is greater than or equal to the parent
     pub fn min_heapify(&mut self, mut idx: u32) {
-        let mut parent = self.get(idx).unwrap();
-        let mut smallest = parent;
-        // get right and left child
-        if let Some(right) = self.right_child(idx) {
-            if right.count < smallest.count {
-                println!("right child is smaller");
-                smallest = right;
-                idx = 2 * idx + 2;
+        if let Some(mut parent) = self.get(idx) {
+            let mut smallest = parent;
+
+            // get right and left child
+            if let Some(right) = self.right_child(idx) {
+                if right.count < smallest.count {
+                    smallest = right;
+                    idx = 2 * idx + 2;
+                }
+            }
+
+            if let Some(left) = self.left_child(idx) {
+                if left.count < smallest.count {
+                    smallest = left;
+                    idx = 2 * idx + 1;
+                }
+            }
+
+            if smallest.ne(&parent) {
+                swap(&mut parent, &mut smallest);
+                self.min_heapify(idx);
             }
         }
-
-        if let Some(left) = self.left_child(idx) {
-            if left.count < smallest.count {
-                println!("left child is smaller");
-                smallest = left;
-                idx = 2 * idx + 1;
-            }
-        }
-
-        if smallest.ne(&parent) {
-            println!("swapping the nodes");
-            swap(&mut parent, &mut smallest);
-            self.min_heapify(idx);
+    }
+    // build a min heap using min heapify function
+    pub fn build_min_heap(&mut self) {
+        let n = self.size - 1;
+        let idx = (n - 1) / 2;
+        for n in (0..idx).rev() {
+            self.min_heapify(n);
         }
     }
 }
