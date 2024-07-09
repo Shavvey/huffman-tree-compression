@@ -11,8 +11,11 @@ pub fn get_lines(file_path: &str) -> Vec<String> {
     // return the result
     result
 }
+
 // create a mapping of chars with their character occurences in the file path
 pub fn map_chars(file_path: &str) -> HashMap<char, u32> {
+    // create a mutable hashmap that will associated a char, as a key, to the occruences inside
+    // textfile, its value
     let mut map: HashMap<char, u32> = HashMap::new();
     // using lines to in textfile to count char occurences
     let lines = get_lines(file_path);
