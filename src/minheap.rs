@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use std::{cmp::Ordering, collections::hash_map::HashMap, mem::swap};
+use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
@@ -19,10 +19,15 @@ impl Ord for Node {
     }
 }
 
+impl Display for Node {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "[{}, {}]", self.item, self.count)
+    }
+}
 impl Node {
     pub fn print(&self) {
         println!("Character encoded: {}", self.item);
-        println!("Occurences: {}", self.count);
+        println!("Frequency: {}", self.count);
     }
 }
 
@@ -63,7 +68,7 @@ impl MinHeap {
     pub fn left_child(&self, index: u32) -> Option<&Node> {
         let l_item = 2 * index + 1;
         // check to see if we have overindexed the array
-        if l_item > self.size {
+        if l_item > self.size - 1 {
             return None;
         }
         Some(&self.heap[l_item as usize])
@@ -73,7 +78,7 @@ impl MinHeap {
     pub fn right_child(&self, index: u32) -> Option<&Node> {
         let r_item = 2 * index + 2;
         // check to see if we have overindex the array
-        if r_item > self.size {
+        if r_item > self.size - 1 {
             return None;
         }
         Some(&self.heap[r_item as usize])
@@ -90,7 +95,7 @@ impl MinHeap {
     }
 
     pub fn get(&self, index: u32) -> Option<&Node> {
-        if index > self.size {
+        if index > self.size - 1 {
             return None;
         }
         Some(&self.heap[index as usize])
@@ -104,29 +109,35 @@ impl MinHeap {
         println!("Size: {}", self.size);
     }
 
+    pub fn swap(&mut self, a: usize, b: usize) {
+        let temp = self.heap[a];
+        self.heap[a] = self.heap[b];
+        self.heap[b] = temp;
+    }
+
     // use min heapify to create min the heap property
     // where all children of a node is greater than or equal to the parent
     pub fn min_heapify(&mut self, mut idx: u32) {
-        if let Some(mut parent) = self.get(idx) {
+        if let Some(parent) = self.get(idx) {
+            let mut swap_idx = idx;
             let mut smallest = parent;
-
             // get right and left child
             if let Some(right) = self.right_child(idx) {
-                if right.count < smallest.count {
+                if right < smallest {
                     smallest = right;
-                    idx = 2 * idx + 2;
+                    swap_idx = 2 * idx + 2;
                 }
             }
 
             if let Some(left) = self.left_child(idx) {
-                if left.count < smallest.count {
+                if left < parent {
                     smallest = left;
-                    idx = 2 * idx + 1;
+                    swap_idx = 2 * idx + 1;
                 }
             }
-
             if smallest.ne(&parent) {
-                swap(&mut parent, &mut smallest);
+                self.swap(idx as usize, swap_idx as usize);
+                idx = swap_idx;
                 self.min_heapify(idx);
             }
         }
@@ -135,8 +146,8 @@ impl MinHeap {
     pub fn build_min_heap(&mut self) {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
-        for n in (0..idx).rev() {
-            self.min_heapify(n);
+        for i in (0..=idx).rev() {
+            self.min_heapify(i);
         }
     }
 }
