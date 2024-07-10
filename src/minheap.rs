@@ -49,14 +49,14 @@ impl MinHeap {
 
     pub fn from_map(map: &HashMap<char, u32>) -> Self {
         let mut min_heap = MinHeap::new(map.len() as u32);
-        let mut index: u32 = 0;
+        let mut index: usize = 0;
         for (key, val) in map {
             // build a node using the char mapping
             let node = Node {
                 item: *key,
                 count: *val,
             };
-            min_heap.heap.insert(index as usize, node);
+            min_heap.heap.insert(index, node);
             min_heap.size += 1;
             index += 1;
         }
@@ -110,6 +110,7 @@ impl MinHeap {
     }
 
     pub fn swap(&mut self, a: usize, b: usize) {
+        // swapping using temp values
         let temp = self.heap[a];
         self.heap[a] = self.heap[b];
         self.heap[b] = temp;
