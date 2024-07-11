@@ -48,7 +48,7 @@ impl MinHeap {
     }
 
     pub fn from_map(map: &HashMap<char, u32>) -> Self {
-        let mut min_heap = MinHeap::new(map.len() as u32);
+        let mut heap = MinHeap::new(map.len() as u32);
         let mut index: usize = 0;
         for (key, val) in map {
             // build a node using the char mapping
@@ -56,12 +56,13 @@ impl MinHeap {
                 item: *key,
                 count: *val,
             };
-            min_heap.heap.insert(index, node);
-            min_heap.size += 1;
+            heap.heap.insert(index, node);
+            heap.size += 1;
             index += 1;
         }
-        min_heap.capacity = 0;
-        min_heap
+        heap.capacity = 0;
+        heap.min_heapify(0);
+        heap
     }
 
     // gets the left child in the minheap
