@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -42,7 +41,9 @@ impl Display for MinHeap {
         let mut output = String::new();
         self.heap
             .iter()
+            // gather each node info into a string
             .for_each(|node| output.push_str(&format!("[{}, {}] ", node.item, node.count)));
+        // write to the formatter
         write!(f, "{output}")
     }
 }
@@ -57,6 +58,7 @@ impl MinHeap {
         }
     }
 
+    // create a min_heap from map
     pub fn from_map(map: &HashMap<char, u32>) -> Self {
         let mut heap = MinHeap::new(map.len() as u32);
         let mut index: usize = 0;
@@ -71,13 +73,23 @@ impl MinHeap {
             index += 1;
         }
         heap.capacity = 0;
+        // call min_heapify to create the min heap property
         heap.min_heapify(0);
+        // return back the heap
         heap
+    }
+
+    pub fn left(index: u32) -> u32 {
+        2 * index + 1
+    }
+
+    pub fn right(index: u32) -> u32 {
+        2 * index + 2
     }
 
     // gets the left child in the minheap
     pub fn left_child(&self, index: u32) -> Option<&Node> {
-        let l_item = 2 * index + 1;
+        let l_item = MinHeap::left(index);
         // check to see if we have overindexed the array
         if l_item > self.size - 1 {
             return None;
@@ -87,7 +99,7 @@ impl MinHeap {
 
     // gets the right child in the minheap
     pub fn right_child(&self, index: u32) -> Option<&Node> {
-        let r_item = 2 * index + 2;
+        let r_item = MinHeap::right(index);
         // check to see if we have overindex the array
         if r_item > self.size - 1 {
             return None;
@@ -119,7 +131,7 @@ impl MinHeap {
         println!("Capacity: {}", self.capacity);
         println!("Size: {}", self.size);
     }
-
+    /// helper function to swap two values in the min_heap
     pub fn swap(&mut self, a: usize, b: usize) {
         // swapping using temp values
         let temp = self.heap[a];
@@ -137,14 +149,14 @@ impl MinHeap {
             if let Some(right) = self.right_child(idx) {
                 if right < smallest {
                     smallest = right;
-                    swap_idx = 2 * idx + 2;
+                    swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_child(idx) {
                 if left < smallest {
                     smallest = left;
-                    swap_idx = 2 * idx + 1;
+                    swap_idx = MinHeap::left(idx);
                 }
             }
             if smallest.ne(&parent) {
