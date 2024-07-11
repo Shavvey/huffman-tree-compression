@@ -37,6 +37,16 @@ pub struct MinHeap {
     size: u32,
 }
 
+impl Display for MinHeap {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut output = String::new();
+        self.heap
+            .iter()
+            .for_each(|node| output.push_str(&format!("[{}, {}] ", node.item, node.count)));
+        write!(f, "{output}")
+    }
+}
+
 impl MinHeap {
     // create the minheap
     pub fn new(capacity: u32) -> Self {

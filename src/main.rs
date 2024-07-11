@@ -10,5 +10,5 @@ fn main() {
     println!("{:?}", lines);
     let map = file::map_chars(FILE_NAME);
     let min_heap = MinHeap::from_map(&map);
-    min_heap.print();
+    println!("{min_heap}");
 }
