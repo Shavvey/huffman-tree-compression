@@ -142,7 +142,7 @@ impl MinHeap {
             }
 
             if let Some(left) = self.left_child(idx) {
-                if left < parent {
+                if left < smallest {
                     smallest = left;
                     swap_idx = 2 * idx + 1;
                 }
