@@ -1,5 +1,7 @@
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
+use crate::file;
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
     item: char,
@@ -56,6 +58,11 @@ impl MinHeap {
             capacity,
             size: 0,
         }
+    }
+
+    pub fn create_from_file(filename: &str) -> MinHeap {
+        let map = file::map_chars(filename);
+        MinHeap::from_map(&map)
     }
 
     // create a min_heap from map
@@ -145,7 +152,6 @@ impl MinHeap {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
             let mut smallest = parent;
-            // get right and left child
             if let Some(right) = self.right_child(idx) {
                 if right < smallest {
                     smallest = right;
