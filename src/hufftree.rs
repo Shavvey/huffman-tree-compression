@@ -15,11 +15,17 @@ impl HuffNode {
 pub struct HuffTree {
     capacity: u32,
     size: u32,
-    tree: Vec<HuffTree>,
+    tree: Vec<HuffNode>,
 }
 
 impl HuffTree {
     pub fn build(min_heap: &MinHeap) -> HuffTree {
         todo!();
+    }
+
+    pub fn to_string(&self) -> String {
+        let mut result = String::new();
+        self.tree.iter().for_each(|node| result.push(node.item));
+        result
     }
 }
