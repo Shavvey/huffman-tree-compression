@@ -1,4 +1,6 @@
 #![allow(dead_code)]
+use std::fmt::Display;
+
 use crate::minheap::MinHeap;
 
 pub struct HuffNode {
@@ -16,6 +18,15 @@ pub struct HuffTree {
     capacity: u32,
     size: u32,
     tree: Vec<HuffNode>,
+}
+impl Display for HuffTree {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut output = String::new();
+        self.tree
+            .iter()
+            .for_each(|node| output.push_str(&format!("[{},{}]", node.item, node.freq)));
+        write!(f, "{output}")
+    }
 }
 
 impl HuffTree {
