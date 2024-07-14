@@ -1,29 +1,26 @@
 #![allow(dead_code)]
 
-use crate::minheap::{MinHeap, Node};
+use crate::maxheap::{MaxHeap, Node};
 
 pub struct HuffTree {
-    pub tree: MinHeap,
+    pub tree: MaxHeap,
 }
 
 impl HuffTree {
     pub fn new(capacity: u32) -> HuffTree {
         HuffTree {
-            tree: MinHeap::new(capacity),
+            tree: MaxHeap::new(capacity),
         }
     }
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
     // intermediates nodes such that each node
     // now represents a leaf on the tree
-    pub fn build(min_heap: &mut MinHeap) -> HuffTree {
+    pub fn build(min_heap: &mut MaxHeap) -> HuffTree {
         let mut ht = HuffTree::new(min_heap.size);
-        ht.tree.size = min_heap.size;
-        let size = ht.tree.size;
-        println!("Size: {size}");
-        ht.tree.heap = min_heap.heap.clone();
-        ht.tree.print();
-        for _ in 0..2 {
+        ht.tree = min_heap.clone();
+        for _ in 0..3 {
+            println!("Heap size: {}", min_heap.size);
             let left = min_heap.extract_max();
             let right = min_heap.extract_max();
             let par = Node {
@@ -53,9 +50,9 @@ impl HuffTree {
         let mut i = self.tree.size - 1;
         while (i != 0) && (node.count > self.tree.parent_node(i).unwrap().count) {
             let curr = i as usize;
-            let parent = MinHeap::parent(i) as usize;
+            let parent = MaxHeap::parent(i) as usize;
             self.tree.swap(curr, parent);
-            i = MinHeap::parent(i);
+            i = MaxHeap::parent(i);
         }
     }
 }
