@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 use crate::minheap::{MinHeap, Node};
 
 pub struct HuffTree {
@@ -6,6 +7,11 @@ pub struct HuffTree {
 }
 
 impl HuffTree {
+    pub fn new(capacity: u32) -> HuffTree {
+        HuffTree {
+            tree: MinHeap::new(capacity),
+        }
+    }
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
     // intermediates nodes such that each node
@@ -24,5 +30,15 @@ impl HuffTree {
         result
     }
 
-    pub fn insert(&self, node: Node) {}
+    pub fn insert(&mut self, node: Node) {
+        self.tree.size += 1;
+        // start at very end of tree
+        let mut i = self.tree.size - 1;
+        while (i != 0) && (node.count < self.tree.parent_node(i).unwrap().count) {
+            let curr = i as usize;
+            let parent = MinHeap::parent(i) as usize;
+            self.tree.swap(curr, parent);
+            i = MinHeap::parent(i);
+        }
+    }
 }

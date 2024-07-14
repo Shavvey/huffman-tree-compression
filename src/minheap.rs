@@ -184,4 +184,11 @@ impl MinHeap {
             self.min_heapify(i);
         }
     }
+
+    pub fn extract_min(&mut self) -> Node {
+        let node = self.heap[0];
+        self.heap.remove(0);
+        self.min_heapify(0);
+        node
+    }
 }
