@@ -173,7 +173,7 @@ impl MinHeap {
         }
     }
     // build a min heap using min heapify function
-    pub fn build_max_heap(&mut self) {
+    pub fn build_min_heap(&mut self) {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
         for i in (0..=idx).rev() {
@@ -181,7 +181,7 @@ impl MinHeap {
         }
     }
 
-    pub fn extract_min(&mut self) -> Node {
+    pub fn extract_max(&mut self) -> Node {
         let node = self.heap[0];
         self.heap.remove(0);
         self.size -= 1;

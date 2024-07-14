@@ -24,8 +24,8 @@ impl HuffTree {
         ht.tree.heap = min_heap.heap.clone();
         ht.tree.print();
         for _ in 0..2 {
-            let left = min_heap.extract_min();
-            let right = min_heap.extract_min();
+            let left = min_heap.extract_max();
+            let right = min_heap.extract_max();
             let par = Node {
                 count: left.count + right.count,
                 item: '$',
