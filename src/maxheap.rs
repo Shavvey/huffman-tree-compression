@@ -126,6 +126,10 @@ impl MaxHeap {
     }
 
     pub fn get(&self, index: u32) -> Option<&Node> {
+        if self.size == 0 {
+            return None;
+        }
+
         if index > self.size - 1 {
             return None;
         }
@@ -173,7 +177,7 @@ impl MaxHeap {
         }
     }
     // build a min heap using min heapify function
-    pub fn build_min_heap(&mut self) {
+    pub fn build_max_heap(&mut self) {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
         for i in (0..=idx).rev() {
@@ -182,6 +186,7 @@ impl MaxHeap {
     }
 
     pub fn extract_max(&mut self) -> Node {
+        println!("{self}");
         let first = self.heap[0];
         let last = self.size - 1;
         self.heap[0] = self.heap[last as usize];

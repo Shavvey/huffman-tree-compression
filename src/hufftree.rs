@@ -19,8 +19,7 @@ impl HuffTree {
     pub fn build(min_heap: &mut MaxHeap) -> HuffTree {
         let mut ht = HuffTree::new(min_heap.size);
         ht.tree = min_heap.clone();
-        for _ in 0..3 {
-            println!("Heap size: {}", min_heap.size);
+        for _ in 0..min_heap.size / 2 {
             let left = min_heap.extract_max();
             let right = min_heap.extract_max();
             let par = Node {
@@ -30,6 +29,7 @@ impl HuffTree {
             // insert intermediate node
             ht.insert(par);
         }
+        ht.tree.print();
         ht
     }
 
