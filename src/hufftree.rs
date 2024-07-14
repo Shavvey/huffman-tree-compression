@@ -23,7 +23,7 @@ impl HuffTree {
         println!("Size: {size}");
         ht.tree.heap = min_heap.heap.clone();
         ht.tree.print();
-        for _ in 0..3 {
+        for _ in 0..2 {
             let left = min_heap.extract_min();
             let right = min_heap.extract_min();
             let par = Node {

@@ -78,7 +78,7 @@ impl MinHeap {
             index += 1;
         }
         // call min_heapify to create the min heap property
-        heap.min_heapify(0);
+        heap.max_heapify(0);
         // return back the heap
         heap
     }
@@ -148,19 +148,19 @@ impl MinHeap {
 
     // use min heapify to create min the heap property
     // where all children of a node is greater than or equal to the parent
-    pub fn min_heapify(&mut self, mut idx: u32) {
+    pub fn max_heapify(&mut self, mut idx: u32) {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
             let mut smallest = parent;
             if let Some(right) = self.right_node(idx) {
-                if right < smallest {
+                if right > smallest {
                     smallest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
-                if left < smallest {
+                if left > smallest {
                     smallest = left;
                     swap_idx = MinHeap::left(idx);
                 }
@@ -168,16 +168,16 @@ impl MinHeap {
             if smallest.ne(&parent) {
                 self.swap(idx as usize, swap_idx as usize);
                 idx = swap_idx;
-                self.min_heapify(idx);
+                self.max_heapify(idx);
             }
         }
     }
     // build a min heap using min heapify function
-    pub fn build_min_heap(&mut self) {
+    pub fn build_max_heap(&mut self) {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
         for i in (0..=idx).rev() {
-            self.min_heapify(i);
+            self.max_heapify(i);
         }
     }
 
@@ -185,7 +185,7 @@ impl MinHeap {
         let node = self.heap[0];
         self.heap.remove(0);
         self.size -= 1;
-        self.min_heapify(0);
+        self.max_heapify(0);
         node
     }
 }
