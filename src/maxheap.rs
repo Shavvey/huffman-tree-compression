@@ -185,14 +185,18 @@ impl MaxHeap {
         }
     }
 
-    pub fn extract_max(&mut self) -> Node {
-        println!("{self}");
-        let first = self.heap[0];
-        let last = self.size - 1;
-        self.heap[0] = self.heap[last as usize];
-        self.heap.pop();
-        self.size -= 1;
-        self.max_heapify(0);
-        first
+    pub fn extract_max(&mut self) -> Option<Node> {
+        if self.size > 0 {
+            println!("{self}");
+            let first = self.heap[0];
+            let last = self.size - 1;
+            self.heap[0] = self.heap[last as usize];
+            self.heap.pop();
+            self.size -= 1;
+            self.max_heapify(0);
+            return Some(first);
+        } else {
+            None
+        }
     }
 }

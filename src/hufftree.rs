@@ -19,15 +19,15 @@ impl HuffTree {
     pub fn build(min_heap: &mut MaxHeap) -> HuffTree {
         let mut ht = HuffTree::new(min_heap.size);
         ht.tree = min_heap.clone();
-        for _ in 0..min_heap.size / 2 {
+        while min_heap.size > 1 {
             let left = min_heap.extract_max();
             let right = min_heap.extract_max();
-            let par = Node {
-                count: left.count + right.count,
+            let node = Node {
+                count: HuffTree::sum(left, right),
                 item: '$',
             };
             // insert intermediate node
-            ht.insert(par);
+            ht.insert(node);
         }
         ht.tree.print();
         ht
@@ -54,5 +54,18 @@ impl HuffTree {
             self.tree.swap(curr, parent);
             i = MaxHeap::parent(i);
         }
+    }
+    pub fn sum(l: Option<Node>, r: Option<Node>) -> u32 {
+        let cl: u32;
+        let cr: u32;
+        match l {
+            None => cl = 0,
+            Some(left) => cl = left.count,
+        }
+        match r {
+            None => cr = 0,
+            Some(right) => cr = right.count,
+        }
+        cr + cl
     }
 }
