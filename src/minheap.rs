@@ -4,8 +4,8 @@ use crate::file;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
-    item: char,
-    count: u32,
+    pub item: char,
+    pub count: u32,
 }
 // implementing a very simple order and partial ordering scheme for the minheap nodes
 impl PartialOrd for Node {
@@ -33,9 +33,9 @@ impl Node {
 }
 
 pub struct MinHeap {
-    heap: Vec<Node>, // heap contains all the nodes
-    capacity: u32,   // capacity of the given minheap
-    size: u32,
+    pub heap: Vec<Node>, // heap contains all the nodes
+    pub capacity: u32,   // capacity of the given minheap
+    pub size: u32,
 }
 
 impl Display for MinHeap {
@@ -94,8 +94,12 @@ impl MinHeap {
         2 * index + 2
     }
 
+    pub fn parent(index: u32) -> u32 {
+        (index - 1) / 2
+    }
+
     // gets the left child in the minheap
-    pub fn left_child(&self, index: u32) -> Option<&Node> {
+    pub fn left_node(&self, index: u32) -> Option<&Node> {
         let l_item = MinHeap::left(index);
         // check to see if we have overindexed the array
         if l_item > self.size - 1 {
@@ -105,7 +109,7 @@ impl MinHeap {
     }
 
     // gets the right child in the minheap
-    pub fn right_child(&self, index: u32) -> Option<&Node> {
+    pub fn right_node(&self, index: u32) -> Option<&Node> {
         let r_item = MinHeap::right(index);
         // check to see if we have overindex the array
         if r_item > self.size - 1 {
@@ -115,7 +119,7 @@ impl MinHeap {
     }
 
     // get the parent node
-    pub fn parent(&self, index: u32) -> Option<&Node> {
+    pub fn parent_node(&self, index: u32) -> Option<&Node> {
         let p_item = (index - 1) / 2;
         // check to see if we have overindex the array
         if p_item > self.size {
@@ -152,14 +156,14 @@ impl MinHeap {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
             let mut smallest = parent;
-            if let Some(right) = self.right_child(idx) {
+            if let Some(right) = self.right_node(idx) {
                 if right < smallest {
                     smallest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
-            if let Some(left) = self.left_child(idx) {
+            if let Some(left) = self.left_node(idx) {
                 if left < smallest {
                     smallest = left;
                     swap_idx = MinHeap::left(idx);
