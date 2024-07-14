@@ -34,7 +34,6 @@ impl Node {
 
 pub struct MinHeap {
     pub heap: Vec<Node>, // heap contains all the nodes
-    pub capacity: u32,   // capacity of the given minheap
     pub size: u32,
 }
 
@@ -55,7 +54,6 @@ impl MinHeap {
     pub fn new(capacity: u32) -> Self {
         MinHeap {
             heap: Vec::with_capacity(capacity as usize),
-            capacity,
             size: 0,
         }
     }
@@ -79,7 +77,6 @@ impl MinHeap {
             heap.size += 1;
             index += 1;
         }
-        heap.capacity = 0;
         // call min_heapify to create the min heap property
         heap.min_heapify(0);
         // return back the heap
@@ -139,7 +136,6 @@ impl MinHeap {
         for node in self.heap.iter() {
             node.print();
         }
-        println!("Capacity: {}", self.capacity);
         println!("Size: {}", self.size);
     }
     /// helper function to swap two values in the min_heap
@@ -188,6 +184,7 @@ impl MinHeap {
     pub fn extract_min(&mut self) -> Node {
         let node = self.heap[0];
         self.heap.remove(0);
+        self.size -= 1;
         self.min_heapify(0);
         node
     }
