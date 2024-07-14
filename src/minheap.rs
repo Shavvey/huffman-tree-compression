@@ -151,21 +151,21 @@ impl MinHeap {
     pub fn max_heapify(&mut self, mut idx: u32) {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
-            let mut smallest = parent;
+            let mut largest = parent;
             if let Some(right) = self.right_node(idx) {
-                if right > smallest {
-                    smallest = right;
+                if right >= largest {
+                    largest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
-                if left > smallest {
-                    smallest = left;
+                if left >= largest {
+                    largest = left;
                     swap_idx = MinHeap::left(idx);
                 }
             }
-            if smallest.ne(&parent) {
+            if largest.ne(&parent) {
                 self.swap(idx as usize, swap_idx as usize);
                 idx = swap_idx;
                 self.max_heapify(idx);
