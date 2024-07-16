@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use std::borrow::Borrow;
+
 use crate::minheap::{MinHeap, Node};
 
 pub struct HuffNode {
@@ -16,16 +18,26 @@ impl HuffNode {
             right: Subtree::new(),
         }
     }
+
+    pub fn to_huff_node(node: &Node) -> Self {
+        Self {
+            value: *node,
+            left: Subtree::new(),
+            right: Subtree::new(),
+        }
+    }
 }
-// either contains a value, a reference to another, or nothing
-pub struct Subtree(Option<Box<HuffNode>>);
+// either contains a value, a reference to another node, or nothing
+pub struct Subtree {
+    root: Option<Box<HuffNode>>,
+}
 
 impl Subtree {
     pub fn new() -> Self {
-        Self(None)
+        Self { root: None }
     }
     pub fn len(&self) -> usize {
-        match &self.0 {
+        match &self.root {
             None => 0,
             Some(n) => 1 + n.left.len() + n.right.len(),
         }
@@ -43,14 +55,27 @@ impl HuffTree {
         }
     }
 
+    // return len of entire tree, uses recursive call of subtree len() method
     pub fn len(&self) -> usize {
         self.root.len()
     }
+
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
     // intermediates nodes such that each node
     // now represents a leaf on the tree
     pub fn build(min_heap: &mut MinHeap) -> HuffTree {
+        while min_heap.size() > 1 {
+            let left = min_heap.extract_min().unwrap();
+            let right = min_heap.extract_min().unwrap();
+            let node = Node::new('$', left.count() + right.count());
+            min_heap.insert(node);
+            let left_huff = HuffNode::to_huff_node(&left);
+            let mut huff_node = HuffNode::new(node);
+            huff_node.left = Subtree {
+                root: Option::Some(Box::new(left_huff)),
+            }
+        }
         todo!();
     }
 

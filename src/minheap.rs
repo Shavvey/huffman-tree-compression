@@ -7,6 +7,18 @@ pub struct Node {
     item: char,
     count: u32,
 }
+
+impl Node {
+    pub fn new(item: char, count: u32) -> Self {
+        Self { item, count }
+    }
+    pub fn count(&self) -> u32 {
+        self.count
+    }
+    pub fn item(&self) -> char {
+        self.item
+    }
+}
 // implementing a very simple order and partial ordering scheme for the minheap nodes
 impl PartialOrd for Node {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -52,7 +64,7 @@ impl Display for MinHeap {
 impl MinHeap {
     // create the minheap
     pub fn new(capacity: u32) -> Self {
-        MinHeap {
+        Self {
             heap: Vec::with_capacity(capacity as usize),
             size: 0,
         }
@@ -60,7 +72,7 @@ impl MinHeap {
 
     pub fn create_from_file(filename: &str) -> MinHeap {
         let map = file::map_chars(filename);
-        MinHeap::from_map(&map)
+        Self::from_map(&map)
     }
 
     // create a min_heap from map
@@ -78,7 +90,7 @@ impl MinHeap {
             index += 1;
         }
         // call min_heapify to create the min heap property
-        heap.max_heapify(0);
+        heap.min_heapify(0);
         // return back the heap
         heap
     }
@@ -93,6 +105,9 @@ impl MinHeap {
 
     pub fn parent(index: u32) -> u32 {
         (index - 1) / 2
+    }
+    pub fn size(&self) -> u32 {
+        self.size
     }
 
     // gets the left child in the minheap
@@ -163,7 +178,7 @@ impl MinHeap {
     }
     // use min heapify to create min the heap property
     // where all children of a node is greater than or equal to the parent
-    pub fn max_heapify(&mut self, mut idx: u32) {
+    pub fn min_heapify(&mut self, mut idx: u32) {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
             let mut smallest = parent;
@@ -183,7 +198,7 @@ impl MinHeap {
             if smallest.ne(&parent) {
                 self.swap(idx as usize, swap_idx as usize);
                 idx = swap_idx;
-                self.max_heapify(idx);
+                self.min_heapify(idx);
             }
         }
     }
@@ -192,11 +207,11 @@ impl MinHeap {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
         for i in (0..=idx).rev() {
-            self.max_heapify(i);
+            self.min_heapify(i);
         }
     }
 
-    pub fn extract_max(&mut self) -> Option<Node> {
+    pub fn extract_min(&mut self) -> Option<Node> {
         if self.size > 0 {
             println!("{self}");
             let first = self.heap[0];
@@ -204,7 +219,7 @@ impl MinHeap {
             self.heap[0] = self.heap[last as usize];
             self.heap.pop();
             self.size -= 1;
-            self.max_heapify(0);
+            self.min_heapify(0);
             return Some(first);
         } else {
             None
