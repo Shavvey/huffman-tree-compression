@@ -32,12 +32,12 @@ impl Node {
     }
 }
 #[derive(Clone)]
-pub struct MaxHeap {
+pub struct MinHeap {
     pub heap: Vec<Node>, // heap contains all the nodes
     pub size: u32,
 }
 
-impl Display for MaxHeap {
+impl Display for MinHeap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut output = String::new();
         self.heap
@@ -49,23 +49,23 @@ impl Display for MaxHeap {
     }
 }
 
-impl MaxHeap {
+impl MinHeap {
     // create the minheap
     pub fn new(capacity: u32) -> Self {
-        MaxHeap {
+        MinHeap {
             heap: Vec::with_capacity(capacity as usize),
             size: 0,
         }
     }
 
-    pub fn create_from_file(filename: &str) -> MaxHeap {
+    pub fn create_from_file(filename: &str) -> MinHeap {
         let map = file::map_chars(filename);
-        MaxHeap::from_map(&map)
+        MinHeap::from_map(&map)
     }
 
     // create a min_heap from map
     pub fn from_map(map: &HashMap<char, u32>) -> Self {
-        let mut heap = MaxHeap::new(map.len() as u32);
+        let mut heap = MinHeap::new(map.len() as u32);
         let mut index: usize = 0;
         for (key, val) in map {
             // build a node using the char mapping
@@ -97,7 +97,7 @@ impl MaxHeap {
 
     // gets the left child in the minheap
     pub fn left_node(&self, index: u32) -> Option<&Node> {
-        let l_item = MaxHeap::left(index);
+        let l_item = MinHeap::left(index);
         // check to see if we have overindexed the array
         if l_item > self.size - 1 {
             return None;
@@ -107,7 +107,7 @@ impl MaxHeap {
 
     // gets the right child in the minheap
     pub fn right_node(&self, index: u32) -> Option<&Node> {
-        let r_item = MaxHeap::right(index);
+        let r_item = MinHeap::right(index);
         // check to see if we have overindex the array
         if r_item > self.size - 1 {
             return None;
@@ -150,6 +150,17 @@ impl MaxHeap {
         self.heap[b] = temp;
     }
 
+    pub fn insert(&mut self, node: Node) {
+        // start at very end of tree
+        self.heap.push(node);
+        let mut i = self.size - 1;
+        while (i != 0) && (node.count > self.parent_node(i).unwrap().count) {
+            let curr = i as usize;
+            let parent = MinHeap::parent(i) as usize;
+            self.swap(curr, parent);
+            i = MinHeap::parent(i);
+        }
+    }
     // use min heapify to create min the heap property
     // where all children of a node is greater than or equal to the parent
     pub fn max_heapify(&mut self, mut idx: u32) {
@@ -159,14 +170,14 @@ impl MaxHeap {
             if let Some(right) = self.right_node(idx) {
                 if right >= largest {
                     largest = right;
-                    swap_idx = MaxHeap::right(idx);
+                    swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
                 if left >= largest {
                     largest = left;
-                    swap_idx = MaxHeap::left(idx);
+                    swap_idx = MinHeap::left(idx);
                 }
             }
             if largest.ne(&parent) {

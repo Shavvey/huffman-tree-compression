@@ -1,16 +1,15 @@
 use std::env;
 
 use hufftree::HuffTree;
-use maxheap::MaxHeap;
+use minheap::MinHeap;
 
 pub mod file;
 pub mod hufftree;
-pub mod maxheap;
+pub mod minheap;
 
 const FILE_NAME: &str = "example.txt";
 
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
-    let mut min_heap = MaxHeap::create_from_file(FILE_NAME);
-    let tree = HuffTree::build(&mut min_heap);
+    let mut min_heap = MinHeap::create_from_file(FILE_NAME);
 }
