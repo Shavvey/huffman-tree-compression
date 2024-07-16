@@ -4,8 +4,8 @@ use crate::file;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
-    pub item: char,
-    pub count: u32,
+    item: char,
+    count: u32,
 }
 // implementing a very simple order and partial ordering scheme for the minheap nodes
 impl PartialOrd for Node {
@@ -33,8 +33,8 @@ impl Node {
 }
 #[derive(Clone)]
 pub struct MinHeap {
-    pub heap: Vec<Node>, // heap contains all the nodes
-    pub size: u32,
+    heap: Vec<Node>, // heap contains all the nodes
+    size: u32,
 }
 
 impl Display for MinHeap {
@@ -166,21 +166,21 @@ impl MinHeap {
     pub fn max_heapify(&mut self, mut idx: u32) {
         if let Some(parent) = self.get(idx) {
             let mut swap_idx = idx;
-            let mut largest = parent;
+            let mut smallest = parent;
             if let Some(right) = self.right_node(idx) {
-                if right >= largest {
-                    largest = right;
+                if right < smallest {
+                    smallest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
-                if left >= largest {
-                    largest = left;
+                if left < smallest {
+                    smallest = left;
                     swap_idx = MinHeap::left(idx);
                 }
             }
-            if largest.ne(&parent) {
+            if smallest.ne(&parent) {
                 self.swap(idx as usize, swap_idx as usize);
                 idx = swap_idx;
                 self.max_heapify(idx);

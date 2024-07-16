@@ -1,16 +1,16 @@
 #![allow(dead_code)]
 
 use crate::minheap::{MinHeap, Node};
+// either contains a value, a reference to another, or nothing
+pub struct Subtree(Option<Box<Node>>);
 
 pub struct HuffTree {
-    pub tree: MinHeap,
+    root: Subtree,
 }
 
 impl HuffTree {
     pub fn new(capacity: u32) -> HuffTree {
-        HuffTree {
-            tree: MinHeap::new(capacity),
-        }
+        todo!();
     }
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
@@ -22,24 +22,6 @@ impl HuffTree {
 
     // creates a very simple string representation of the hufftree
     pub fn to_string(&self) -> String {
-        let mut result = String::new();
-        self.tree
-            .heap
-            .iter()
-            .for_each(|node| result.push(node.item));
-        result
-    }
-
-    pub fn insert(&mut self, node: Node) {
-        // start at very end of tree
-        self.tree.size += 1;
-        self.tree.heap.push(node);
-        let mut i = self.tree.size - 1;
-        while (i != 0) && (node.count > self.tree.parent_node(i).unwrap().count) {
-            let curr = i as usize;
-            let parent = MinHeap::parent(i) as usize;
-            self.tree.swap(curr, parent);
-            i = MinHeap::parent(i);
-        }
+        todo!();
     }
 }
