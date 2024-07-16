@@ -64,19 +64,30 @@ impl HuffTree {
     // bare min_heap, we do just by inserting
     // intermediates nodes such that each node
     // now represents a leaf on the tree
-    pub fn build(min_heap: &mut MinHeap) -> HuffTree {
+    pub fn build(min_heap: &mut MinHeap) -> Self {
         while min_heap.size() > 1 {
             let left = min_heap.extract_min().unwrap();
             let right = min_heap.extract_min().unwrap();
             let node = Node::new('$', left.count() + right.count());
             min_heap.insert(node);
             let left_huff = HuffNode::to_huff_node(&left);
+            let right_huff = HuffNode::to_huff_node(&right);
             let mut huff_node = HuffNode::new(node);
             huff_node.left = Subtree {
                 root: Option::Some(Box::new(left_huff)),
-            }
+            };
+            huff_node.right = Subtree {
+                root: Option::Some(Box::new(right_huff)),
+            };
+            huff_node.value = node;
         }
-        todo!();
+        let root_node = min_heap.extract_min().unwrap();
+        let huff_root = HuffNode::to_huff_node(&root_node);
+        Self {
+            root: Subtree {
+                root: Option::Some(Box::new(huff_root)),
+            },
+        }
     }
 
     // creates a very simple string representation of the hufftree

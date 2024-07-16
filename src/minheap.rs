@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
-use crate::file;
+use crate::{file, hufftree::HuffNode};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
@@ -68,6 +68,15 @@ impl MinHeap {
             heap: Vec::with_capacity(capacity as usize),
             size: 0,
         }
+    }
+
+    pub fn to_huffnodes(&self) -> Vec<HuffNode> {
+        let mut huff_nodes: Vec<HuffNode> = Vec::new();
+        self.heap.iter().for_each(|node| {
+            let huffnode = HuffNode::to_huff_node(node);
+            huff_nodes.push(huffnode);
+        });
+        huff_nodes
     }
 
     pub fn create_from_file(filename: &str) -> MinHeap {
@@ -168,6 +177,7 @@ impl MinHeap {
     pub fn insert(&mut self, node: Node) {
         // start at very end of tree
         self.heap.push(node);
+        self.size += 1;
         let mut i = self.size - 1;
         while (i != 0) && (node.count > self.parent_node(i).unwrap().count) {
             let curr = i as usize;
