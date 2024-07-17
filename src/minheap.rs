@@ -1,9 +1,10 @@
 use crate::file;
-use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
+use std::{collections::hash_map::HashMap, fmt::Display};
 
 pub struct Subtree {
     pub root: Option<Box<Node>>,
 }
+
 impl Subtree {
     pub fn new() -> Self {
         Self { root: None }
@@ -12,6 +13,24 @@ impl Subtree {
         match &self.root {
             None => 0,
             Some(n) => 1 + n.left.len() + n.right.len(),
+        }
+    }
+    pub fn print(&self) {
+        if let Some(st) = &self.root {
+            println!("[{},{}]", st.item, st.count);
+            st.left.print();
+            st.right.print();
+        }
+    }
+    pub fn to_string(&self) -> String {
+        match &self.root {
+            None => String::from(""),
+            Some(st) => {
+                let mut result = String::from(st.item);
+                result.push_str(&st.left.to_string());
+                result.push_str(&st.right.to_string());
+                result
+            }
         }
     }
 }
@@ -68,19 +87,6 @@ impl Clone for Node {
     }
 }
 
-// implementing a very simple order and partial ordering scheme for the minheap nodes
-impl PartialOrd for Node {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.item.partial_cmp(&other.item)
-    }
-}
-
-impl Ord for Node {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.count.cmp(&other.count)
-    }
-}
-
 impl Display for Node {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "[{}, {}]", self.item, self.count)
@@ -128,7 +134,6 @@ impl MinHeap {
     // create a min_heap from map
     pub fn from_map(map: &HashMap<char, u32>) -> Self {
         let mut heap = MinHeap::new(map.len() as u32);
-        let mut index: usize = 0;
         for (key, val) in map {
             // build a node using the char mapping
             let node = Node {
@@ -137,9 +142,8 @@ impl MinHeap {
                 left: Subtree::new(),
                 right: Subtree::new(),
             };
-            heap.heap.insert(index, node);
+            heap.heap.push(node);
             heap.size += 1;
-            index += 1;
         }
         // call min_heapify to create the min heap property
         heap.min_heapify(0);
@@ -236,14 +240,14 @@ impl MinHeap {
             let mut swap_idx = idx;
             let mut smallest = parent;
             if let Some(right) = self.right_node(idx) {
-                if right < smallest {
+                if right.count < smallest.count {
                     smallest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
-                if left < smallest {
+                if left.count < smallest.count {
                     smallest = left;
                     swap_idx = MinHeap::left(idx);
                 }
@@ -256,7 +260,7 @@ impl MinHeap {
         }
     }
     // build a min heap using min heapify function
-    pub fn build_max_heap(&mut self) {
+    pub fn build_min_heap(&mut self) {
         let n = self.size - 1;
         let idx = (n - 1) / 2;
         for i in (0..=idx).rev() {

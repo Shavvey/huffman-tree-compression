@@ -15,4 +15,6 @@ fn main() {
     println!("{}", min_heap);
     let tree = HuffTree::build(&mut min_heap);
     println!("len: {}", tree.len());
+    tree.print();
+    println!("{}", tree.to_string());
 }

@@ -18,6 +18,10 @@ impl HuffTree {
         self.root.len()
     }
 
+    pub fn print(&self) {
+        self.root.print();
+    }
+
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
     // intermediates nodes such that each node
@@ -45,6 +49,6 @@ impl HuffTree {
 
     // creates a very simple string representation of the hufftree
     pub fn to_string(&self) -> String {
-        todo!();
+        self.root.to_string()
     }
 }
