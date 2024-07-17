@@ -1,5 +1,6 @@
 use crate::file;
 use std::{collections::hash_map::HashMap, fmt::Display};
+pub const MAX_TREE_HEIGHT: usize = 8;
 
 pub struct Subtree {
     pub root: Option<Box<Node>>,
@@ -9,6 +10,38 @@ impl Subtree {
     pub fn new() -> Self {
         Self { root: None }
     }
+
+    pub fn is_leaf(&self) -> bool {
+        match &self.root {
+            None => true,
+            Some(_) => false,
+        }
+    }
+    pub fn print_path(tree_path: [u8; MAX_TREE_HEIGHT], item: char, idx: usize) {
+        let mut result = String::new();
+        for i in 0..idx {
+            if tree_path[i] == 1 {
+                result.push('1');
+            } else {
+                result.push('0');
+            }
+        }
+        println!("{item} : {result}");
+    }
+
+    pub fn print_codes(&self, mut tree_path: [u8; MAX_TREE_HEIGHT], idx: usize, mut item: char) {
+        if let Some(st) = &self.root {
+            item = st.item;
+            tree_path[idx] = 0;
+            st.left.print_codes(tree_path, idx + 1, item);
+
+            tree_path[idx] = 1;
+            st.right.print_codes(tree_path, idx, item)
+        } else {
+            Subtree::print_path(tree_path, item, idx);
+        }
+    }
+
     pub fn len(&self) -> usize {
         match &self.root {
             None => 0,
@@ -31,6 +64,27 @@ impl Subtree {
                 result.push_str(&st.right.to_string());
                 result
             }
+        }
+    }
+
+    pub fn get_item(&self, bit_string: String) {
+        let mut root = &self.root;
+        for c in bit_string.chars() {
+            if c == '0' {
+                if let Some(st) = root {
+                    root = &st.left.root;
+                }
+            }
+            if c == '1' {
+                if let Some(st) = root {
+                    root = &st.right.root;
+                }
+            }
+        }
+
+        match root {
+            Some(st) => println!("Item: {}", st.item),
+            None => println!("No item found!"),
         }
     }
 }
@@ -222,11 +276,12 @@ impl MinHeap {
     }
 
     pub fn insert(&mut self, node: Node) {
+        let count = node.count;
         // start at very end of tree
         self.heap.push(node);
         self.size += 1;
         let mut i = self.size - 1;
-        while (i != 0) && (self.heap.last().unwrap().count > self.parent_node(i).unwrap().count) {
+        while (i > 0) && (count <= self.parent_node(i).unwrap().count) {
             let curr = i as usize;
             let parent = MinHeap::parent(i) as usize;
             self.swap(curr, parent);
@@ -240,14 +295,14 @@ impl MinHeap {
             let mut swap_idx = idx;
             let mut smallest = parent;
             if let Some(right) = self.right_node(idx) {
-                if right.count < smallest.count {
+                if right.count <= smallest.count {
                     smallest = right;
                     swap_idx = MinHeap::right(idx);
                 }
             }
 
             if let Some(left) = self.left_node(idx) {
-                if left.count < smallest.count {
+                if left.count <= smallest.count {
                     smallest = left;
                     swap_idx = MinHeap::left(idx);
                 }
@@ -270,7 +325,6 @@ impl MinHeap {
 
     pub fn extract_min(&mut self) -> Option<Node> {
         if self.size > 0 {
-            println!("{self}");
             let first = self.heap[0].clone();
             let last = self.size - 1;
             self.heap[0] = self.heap[last as usize].clone();
