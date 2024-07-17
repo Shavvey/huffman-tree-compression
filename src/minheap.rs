@@ -52,6 +52,21 @@ impl PartialEq for Node {
 }
 impl Eq for Node {}
 
+impl Clone for Node {
+    fn clone(&self) -> Self {
+        Self {
+            item: self.item,
+            count: self.count,
+            left: Subtree {
+                root: self.left.root.clone(),
+            },
+            right: Subtree {
+                root: self.right.root.clone(),
+            },
+        }
+    }
+}
+
 // implementing a very simple order and partial ordering scheme for the minheap nodes
 impl PartialOrd for Node {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -196,8 +211,8 @@ impl MinHeap {
     /// helper function to swap two values in the min_heap
     pub fn swap(&mut self, a: usize, b: usize) {
         // swapping using temp values
-        let temp = self.heap[a];
-        self.heap[a] = self.heap[b];
+        let temp = self.heap[a].clone();
+        self.heap[a] = self.heap[b].clone();
         self.heap[b] = temp;
     }
 
@@ -206,7 +221,7 @@ impl MinHeap {
         self.heap.push(node);
         self.size += 1;
         let mut i = self.size - 1;
-        while (i != 0) && (node.count > self.parent_node(i).unwrap().count) {
+        while (i != 0) && (self.heap.last().unwrap().count > self.parent_node(i).unwrap().count) {
             let curr = i as usize;
             let parent = MinHeap::parent(i) as usize;
             self.swap(curr, parent);
@@ -251,9 +266,9 @@ impl MinHeap {
     pub fn extract_min(&mut self) -> Option<Node> {
         if self.size > 0 {
             println!("{self}");
-            let first = self.heap[0];
+            let first = self.heap[0].clone();
             let last = self.size - 1;
-            self.heap[0] = self.heap[last as usize];
+            self.heap[0] = self.heap[last as usize].clone();
             self.heap.pop();
             self.size -= 1;
             self.min_heapify(0);
