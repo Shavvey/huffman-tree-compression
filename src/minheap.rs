@@ -2,7 +2,7 @@ use crate::file;
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
 pub struct Subtree {
-    root: Option<Box<Node>>,
+    pub root: Option<Box<Node>>,
 }
 impl Subtree {
     pub fn new() -> Self {
@@ -17,10 +17,10 @@ impl Subtree {
 }
 
 pub struct Node {
-    item: char,
-    count: u32,
-    left: Subtree,
-    right: Subtree,
+    pub item: char,
+    pub count: u32,
+    pub left: Subtree,
+    pub right: Subtree,
 }
 
 impl Node {
@@ -57,6 +57,7 @@ impl Clone for Node {
         Self {
             item: self.item,
             count: self.count,
+            // clone each pointer to the heap allocated node
             left: Subtree {
                 root: self.left.root.clone(),
             },
@@ -94,8 +95,8 @@ impl Node {
 
 #[derive(Clone)]
 pub struct MinHeap {
-    heap: Vec<Node>, // heap contains all the nodes
-    size: u32,
+    pub heap: Vec<Node>, // heap contains all the nodes
+    pub size: u32,
 }
 
 impl Display for MinHeap {
@@ -183,7 +184,7 @@ impl MinHeap {
 
     // get the parent node
     pub fn parent_node(&self, index: u32) -> Option<&Node> {
-        let p_item = (index - 1) / 2;
+        let p_item = MinHeap::parent(index);
         // check to see if we have overindex the array
         if p_item > self.size {
             return None;
