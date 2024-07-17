@@ -31,14 +31,15 @@ impl Subtree {
 
     pub fn print_codes(&self, mut tree_path: [u8; MAX_TREE_HEIGHT], idx: usize, mut item: char) {
         if let Some(st) = &self.root {
-            item = st.item;
+            if st.left.root.is_none() && st.left.root.is_none() {
+                item = st.item;
+                Subtree::print_path(tree_path, item, idx);
+            }
             tree_path[idx] = 0;
             st.left.print_codes(tree_path, idx + 1, item);
 
             tree_path[idx] = 1;
-            st.right.print_codes(tree_path, idx, item)
-        } else {
-            Subtree::print_path(tree_path, item, idx);
+            st.right.print_codes(tree_path, idx + 1, item)
         }
     }
 
