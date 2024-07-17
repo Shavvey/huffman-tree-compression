@@ -1,11 +1,26 @@
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
-use crate::{file, hufftree::HuffNode};
+pub struct Subtree {
+    root: Option<Box<Node>>
+}
+impl Subtree {
+    pub fn new() -> Self {
+        Self { root: None }
+    }
+    pub fn len(&self) -> usize {
+        match &self.root {
+            None => 0,
+            Some(n) => 1 + n.left.len() + n.right.len(),
+        }
+    }
+}
+
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
     item: char,
     count: u32,
+    left: 
 }
 
 impl Node {
@@ -70,7 +85,7 @@ impl MinHeap {
         }
     }
 
-    pub fn to_huffnodes(&self) -> Vec<HuffNode> {
+    pub fn huffnodes(&self) -> Vec<HuffNode> {
         let mut huff_nodes: Vec<HuffNode> = Vec::new();
         self.heap.iter().for_each(|node| {
             let huffnode = HuffNode::to_huff_node(node);
