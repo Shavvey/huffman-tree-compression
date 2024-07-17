@@ -1,7 +1,8 @@
+use crate::file;
 use std::{cmp::Ordering, collections::hash_map::HashMap, fmt::Display};
 
 pub struct Subtree {
-    root: Option<Box<Node>>
+    root: Option<Box<Node>>,
 }
 impl Subtree {
     pub fn new() -> Self {
@@ -15,17 +16,21 @@ impl Subtree {
     }
 }
 
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Node {
     item: char,
     count: u32,
-    left: 
+    left: Subtree,
+    right: Subtree,
 }
 
 impl Node {
     pub fn new(item: char, count: u32) -> Self {
-        Self { item, count }
+        Self {
+            item,
+            count,
+            left: Subtree::new(),
+            right: Subtree::new(),
+        }
     }
     pub fn count(&self) -> u32 {
         self.count
@@ -34,10 +39,23 @@ impl Node {
         self.item
     }
 }
+impl PartialEq for Node {
+    fn eq(&self, other: &Self) -> bool {
+        let count = self.count.eq(&other.count);
+        let char = self.item.eq(&other.item);
+        if count && char {
+            return true;
+        } else {
+            false
+        }
+    }
+}
+impl Eq for Node {}
+
 // implementing a very simple order and partial ordering scheme for the minheap nodes
 impl PartialOrd for Node {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.count.partial_cmp(&other.count)
+        self.item.partial_cmp(&other.item)
     }
 }
 
@@ -58,6 +76,7 @@ impl Node {
         println!("Frequency: {}", self.count);
     }
 }
+
 #[derive(Clone)]
 pub struct MinHeap {
     heap: Vec<Node>, // heap contains all the nodes
@@ -85,15 +104,6 @@ impl MinHeap {
         }
     }
 
-    pub fn huffnodes(&self) -> Vec<HuffNode> {
-        let mut huff_nodes: Vec<HuffNode> = Vec::new();
-        self.heap.iter().for_each(|node| {
-            let huffnode = HuffNode::to_huff_node(node);
-            huff_nodes.push(huffnode);
-        });
-        huff_nodes
-    }
-
     pub fn create_from_file(filename: &str) -> MinHeap {
         let map = file::map_chars(filename);
         Self::from_map(&map)
@@ -108,6 +118,8 @@ impl MinHeap {
             let node = Node {
                 item: *key,
                 count: *val,
+                left: Subtree::new(),
+                right: Subtree::new(),
             };
             heap.heap.insert(index, node);
             heap.size += 1;
