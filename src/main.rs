@@ -11,5 +11,6 @@ const FILE_NAME: &str = "example.txt";
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
     let tree = HuffTree::from_file(FILE_NAME);
-    tree.print_codes();
+    let map = tree.to_map();
+    println!("{:?}", map);
 }

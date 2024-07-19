@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use crate::minheap::{self, MinHeap, Node, Subtree};
+use std::collections::hash_map::HashMap;
 
 pub struct HuffTree {
     root: Subtree, // we can describe the tree as just a collection of subtrees
@@ -65,5 +66,9 @@ impl HuffTree {
     pub fn from_file(file_name: &str) -> HuffTree {
         let mut min_heap = MinHeap::create_from_file(file_name);
         HuffTree::build(&mut min_heap)
+    }
+
+    pub fn to_map(&self) -> HashMap<char, String> {
+        self.root.to_map()
     }
 }

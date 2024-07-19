@@ -12,9 +12,10 @@ impl Subtree {
     }
 
     pub fn is_leaf(&self) -> bool {
-        match &self.root {
-            None => true,
-            Some(_) => false,
+        if let Some(st) = &self.root {
+            return st.left.root.is_none() && st.right.root.is_none();
+        } else {
+            false
         }
     }
     pub fn print_path(tree_path: [u8; MAX_TREE_HEIGHT], item: char, idx: usize) {
@@ -27,6 +28,47 @@ impl Subtree {
             }
         }
         println!("{item} : {result}");
+    }
+
+    pub fn to_map(&self) -> HashMap<char, String> {
+        let tree_path: [u8; MAX_TREE_HEIGHT] = [0; MAX_TREE_HEIGHT];
+        let idx = 0;
+        let mut map = HashMap::<char, String>::new();
+        self.into_map(tree_path, idx, &mut map);
+        map
+    }
+
+    pub fn get_path(tree_path: [u8; MAX_TREE_HEIGHT], idx: usize) -> String {
+        let mut result = String::new();
+        for i in 0..idx {
+            if tree_path[i] == 1 {
+                result.push('1');
+            } else {
+                result.push('0');
+            }
+        }
+        result
+    }
+
+    pub fn into_map(
+        &self,
+        mut tree_path: [u8; MAX_TREE_HEIGHT],
+        idx: usize,
+        map: &mut HashMap<char, String>,
+    ) {
+        if let Some(st) = &self.root {
+            if st.left.root.is_none() && st.left.root.is_none() {
+                let item = st.item;
+                let bit_str = Subtree::get_path(tree_path, idx);
+                println!("bit stirng: {}", bit_str);
+                map.insert(item, bit_str);
+            }
+            tree_path[idx] = 0;
+            st.left.into_map(tree_path, idx + 1, map);
+
+            tree_path[idx] = 1;
+            st.right.into_map(tree_path, idx + 1, map);
+        }
     }
 
     pub fn print_codes(&self, mut tree_path: [u8; MAX_TREE_HEIGHT], idx: usize) {
