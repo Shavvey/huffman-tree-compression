@@ -54,10 +54,16 @@ impl HuffTree {
 
     pub fn print_codes(&self) {
         let tree_path: [u8; minheap::MAX_TREE_HEIGHT] = [0; minheap::MAX_TREE_HEIGHT];
-        self.root.print_codes(tree_path, 0, '#');
+        self.root.print_codes(tree_path, 0);
     }
 
     pub fn get_item(&self, bit_string: String) {
         self.root.get_item(bit_string);
+    }
+
+    // build the huffman tree just using the textfile
+    pub fn from_file(file_name: &str) -> HuffTree {
+        let mut min_heap = MinHeap::create_from_file(file_name);
+        HuffTree::build(&mut min_heap)
     }
 }

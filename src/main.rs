@@ -1,7 +1,6 @@
 use std::env;
 
 use hufftree::HuffTree;
-use minheap::MinHeap;
 
 pub mod file;
 pub mod hufftree;
@@ -11,7 +10,6 @@ const FILE_NAME: &str = "example.txt";
 
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
-    let mut min_heap = MinHeap::create_from_file(FILE_NAME);
-    let tree = HuffTree::build(&mut min_heap);
+    let tree = HuffTree::from_file(FILE_NAME);
     tree.print_codes();
 }

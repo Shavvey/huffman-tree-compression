@@ -29,17 +29,17 @@ impl Subtree {
         println!("{item} : {result}");
     }
 
-    pub fn print_codes(&self, mut tree_path: [u8; MAX_TREE_HEIGHT], idx: usize, mut item: char) {
+    pub fn print_codes(&self, mut tree_path: [u8; MAX_TREE_HEIGHT], idx: usize) {
         if let Some(st) = &self.root {
             if st.left.root.is_none() && st.left.root.is_none() {
-                item = st.item;
+                let item = st.item;
                 Subtree::print_path(tree_path, item, idx);
             }
             tree_path[idx] = 0;
-            st.left.print_codes(tree_path, idx + 1, item);
+            st.left.print_codes(tree_path, idx + 1);
 
             tree_path[idx] = 1;
-            st.right.print_codes(tree_path, idx + 1, item)
+            st.right.print_codes(tree_path, idx + 1)
         }
     }
 
