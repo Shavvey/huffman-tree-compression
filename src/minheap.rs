@@ -18,6 +18,7 @@ impl Subtree {
             false
         }
     }
+
     pub fn print_path(tree_path: [u8; MAX_TREE_HEIGHT], item: char, idx: usize) {
         let mut result = String::new();
         for i in 0..idx {
@@ -50,7 +51,7 @@ impl Subtree {
         result
     }
 
-    pub fn into_map(
+    fn into_map(
         &self,
         mut tree_path: [u8; MAX_TREE_HEIGHT],
         idx: usize,
@@ -60,7 +61,6 @@ impl Subtree {
             if st.left.root.is_none() && st.left.root.is_none() {
                 let item = st.item;
                 let bit_str = Subtree::get_path(tree_path, idx);
-                println!("bit stirng: {}", bit_str);
                 map.insert(item, bit_str);
             }
             tree_path[idx] = 0;
@@ -91,6 +91,7 @@ impl Subtree {
             Some(n) => 1 + n.left.len() + n.right.len(),
         }
     }
+
     pub fn print(&self) {
         if let Some(st) = &self.root {
             println!("[{},{}]", st.item, st.count);
@@ -98,6 +99,7 @@ impl Subtree {
             st.right.print();
         }
     }
+
     pub fn to_string(&self) -> String {
         match &self.root {
             None => String::from(""),

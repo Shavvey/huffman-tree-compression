@@ -19,14 +19,16 @@ impl HuffTree {
         self.root.len()
     }
 
+    // print every node inside the huffman tree,
+    // uses an pre-order traversal (parent-left-right)
     pub fn print(&self) {
         self.root.print();
     }
 
     // function to build the hufftree from
     // bare min_heap, we do just by inserting
-    // intermediates nodes such that each node
-    // now represents a leaf on the tree
+    // intermediates nodes such that each node is put inside
+    // one of these intermediate nodes
     pub fn build(min_heap: &mut MinHeap) -> Self {
         while min_heap.size != 1 {
             let left = min_heap.extract_min().unwrap();
@@ -53,11 +55,13 @@ impl HuffTree {
         self.root.to_string()
     }
 
+    // print out the codes for all characters encountered in the text file
     pub fn print_codes(&self) {
         let tree_path: [u8; minheap::MAX_TREE_HEIGHT] = [0; minheap::MAX_TREE_HEIGHT];
         self.root.print_codes(tree_path, 0);
     }
 
+    // get the item using it code (stored as a string of 0s and 1s for now)
     pub fn get_item(&self, bit_string: String) {
         self.root.get_item(bit_string);
     }
@@ -68,6 +72,7 @@ impl HuffTree {
         HuffTree::build(&mut min_heap)
     }
 
+    // create a mapping of each character to its given bitstring
     pub fn to_map(&self) -> HashMap<char, String> {
         self.root.to_map()
     }
