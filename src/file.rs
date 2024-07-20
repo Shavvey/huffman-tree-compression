@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fs::read_to_string;
+use std::fs::{read_to_string, File};
 
 // get the lines of the textfile, store them into the a vector of strings
 pub fn get_lines(file_path: &str) -> Vec<String> {
@@ -32,4 +32,22 @@ pub fn map_chars(file_path: &str) -> HashMap<char, u32> {
         }
     }
     map
+}
+
+pub fn write_output(file_name: &str, code_map: &HashMap<char, String>) {
+    // first get the lines from the textfile, using file_name
+    let lines = get_lines(file_name);
+    let fs = file_name.replace(".txt", ".bin");
+    println!("New filename: {}", fs);
+    let file = File::create_new("./".to_owned() + &fs);
+    for line in lines {
+        for char in line.chars() {
+            let bit_str = code_map.get(&char);
+            if let Some(str) = &bit_str {
+                println!("{char} : {str}");
+            } else {
+                println!("Found no key!");
+            }
+        }
+    }
 }

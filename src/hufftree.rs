@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::minheap::{self, MinHeap, Node, Subtree};
 use std::collections::hash_map::HashMap;
 
