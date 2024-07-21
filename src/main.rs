@@ -12,5 +12,5 @@ fn main() {
     env::set_var("RUST_BACKTRACE", "1");
     let tree = HuffTree::from_file(FILE_NAME);
     let map = tree.to_map();
-    println!("{:?}", map);
+    let _ = file::to_binary(FILE_NAME, &map);
 }
