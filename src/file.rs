@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fs::{read_to_string, File};
-use std::io::{Bytes, Result, Write};
+use std::io::Result;
 
 // get the lines of the textfile, store them into the a vector of strings
 pub fn get_lines(file_path: &str) -> Vec<String> {
@@ -35,30 +35,24 @@ pub fn map_chars(file_path: &str) -> HashMap<char, u32> {
     map
 }
 
-pub fn to_binary(file_name: &str, code_map: &HashMap<char, String>) {
-    let lines = get_lines(file_name);
-    let res = get_output_file(file_name);
-    match res {
-        Ok(mut file) => {
-            for line in lines {
-                for char in line.chars() {
-                    let key = code_map.get(&char);
-                    if let Some(str) = &key {
-                        let _ = file.write(str.as_bytes());
-                    }
-                }
+pub fn collect(input_file: &str, code_map: &HashMap<char, String>) -> String {
+    let lines = get_lines(input_file);
+    let mut result = String::new();
+    for line in lines {
+        for char in line.chars() {
+            let key = code_map.get(&char);
+            if let Some(str) = &key {
+                result.push_str(str);
             }
         }
-        Err(..) => {
-            eprintln!("Could not create output file!");
-        }
     }
+    result
 }
 
 fn get_output_file(file_name: &str) -> Result<File> {
     let fs = file_name.replace(".txt", ".bin");
     println!("New filename: {}", fs);
-    let nf = File::create_new(&fs);
+    let nf = File::create(&fs);
     match nf {
         Ok(f) => Ok(f),
         Err(err) => {
@@ -66,8 +60,4 @@ fn get_output_file(file_name: &str) -> Result<File> {
             Err(err)
         }
     }
-}
-
-fn write_output(file: &mut File, code_map: &HashMap<char, String>) {
-    let bytes: Vec<u8> = Vec::new();
 }
