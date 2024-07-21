@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fs::{read_to_string, File};
-use std::io::{Result, Write};
+use std::io::{Bytes, Result, Write};
 
 // get the lines of the textfile, store them into the a vector of strings
 pub fn get_lines(file_path: &str) -> Vec<String> {
@@ -68,4 +68,6 @@ fn get_output_file(file_name: &str) -> Result<File> {
     }
 }
 
-fn write_output(file: &mut File, code_map: &HashMap<char, String>) {}
+fn write_output(file: &mut File, code_map: &HashMap<char, String>) {
+    let bytes: Vec<u8> = Vec::new();
+}
