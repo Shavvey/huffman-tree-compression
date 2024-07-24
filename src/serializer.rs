@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::HuffTree;
 use std::collections::HashMap;
 use std::fs::File;
