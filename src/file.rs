@@ -49,7 +49,7 @@ pub fn collect(input_file: &str, code_map: &HashMap<char, String>) -> String {
     result
 }
 
-fn get_output_file(file_name: &str) -> Result<File> {
+pub fn get_output_file(file_name: &str) -> Result<File> {
     let fs = file_name.replace(".txt", ".bin");
     println!("New filename: {}", fs);
     let nf = File::create(&fs);
