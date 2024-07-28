@@ -19,7 +19,7 @@ impl Serializer {
         let fo: File;
         match file_input {
             Ok(file) => fi = file,
-            Err(..) => panic!("Could not open output file!"),
+            Err(..) => panic!("Could not open input file!"),
         };
         let file_output = file::get_output_file(input);
         match file_output {
