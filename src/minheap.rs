@@ -31,6 +31,8 @@ impl Subtree {
         println!("{item} : {result}");
     }
 
+    // just a encapsulation of the other function to produce a mapping between huffman codes and
+    // characters in the plaintext
     pub fn to_map(&self) -> HashMap<char, String> {
         let tree_path: [u8; MAX_TREE_HEIGHT] = [0; MAX_TREE_HEIGHT];
         let idx = 0;
@@ -63,6 +65,7 @@ impl Subtree {
                 let bit_str = Subtree::get_path(tree_path, idx);
                 map.insert(item, bit_str);
             }
+            // remember which path we go down in the subtree, and then recurse
             tree_path[idx] = 0;
             st.left.into_map(tree_path, idx + 1, map);
 
